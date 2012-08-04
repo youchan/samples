@@ -7,7 +7,7 @@
 require 'racc/parser.rb'
 class LlnocCipherParser < Racc::Parser
 
-module_eval(<<'...end LlnocCipher.y/module_eval...', 'LlnocCipher.y', 64)
+module_eval(<<'...end LlnocCipher.y/module_eval...', 'LlnocCipher.y', 61)
 def parse(source)
   @queue = []
   source.each_char do |ch|
@@ -206,11 +206,12 @@ Racc_debug_parser = false
 
 # reduce 0 omitted
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 12)
+module_eval(<<'.,.,', 'LlnocCipher.y', 8)
   def _reduce_1(val, _values, result)
         return 3 unless val[0].length == 4
     val[0].each do |v|
       return 3 unless v[0] == :DEC
+      return 3 if v[1][0] == '0'
       return 3 unless (0..255).include?(v[1].to_i)
     end
     return 1 # ipv4
@@ -219,7 +220,7 @@ module_eval(<<'.,.,', 'LlnocCipher.y', 12)
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 21)
+module_eval(<<'.,.,', 'LlnocCipher.y', 18)
   def _reduce_2(val, _values, result)
         case val[0].length
     when 6
@@ -230,7 +231,7 @@ module_eval(<<'.,.,', 'LlnocCipher.y', 21)
     when 8
       val[0].each do |v|
         return 3 if v[1].length > 4
-        return 3 if v[1][0] == '0' # [v[1].length - 1] == '0'
+        return 3 if v[1][0] == '0'
       end
       return 2 # ipv6
     else
@@ -241,7 +242,7 @@ module_eval(<<'.,.,', 'LlnocCipher.y', 21)
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 39)
+module_eval(<<'.,.,', 'LlnocCipher.y', 36)
   def _reduce_3(val, _values, result)
         return 3 unless val[0].length == 6
     val[0].each do |v|
@@ -253,42 +254,42 @@ module_eval(<<'.,.,', 'LlnocCipher.y', 39)
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 46)
+module_eval(<<'.,.,', 'LlnocCipher.y', 43)
   def _reduce_4(val, _values, result)
      result = [val[0], val[2]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 47)
+module_eval(<<'.,.,', 'LlnocCipher.y', 44)
   def _reduce_5(val, _values, result)
      result << val[2] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 48)
+module_eval(<<'.,.,', 'LlnocCipher.y', 45)
   def _reduce_6(val, _values, result)
      result = [val[0], val[2]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 49)
+module_eval(<<'.,.,', 'LlnocCipher.y', 46)
   def _reduce_7(val, _values, result)
      result << val[2] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 50)
+module_eval(<<'.,.,', 'LlnocCipher.y', 47)
   def _reduce_8(val, _values, result)
      result = [val[0], val[2]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 51)
+module_eval(<<'.,.,', 'LlnocCipher.y', 48)
   def _reduce_9(val, _values, result)
      result << val[2] 
     result
@@ -299,28 +300,28 @@ module_eval(<<'.,.,', 'LlnocCipher.y', 51)
 
 # reduce 11 omitted
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 53)
+module_eval(<<'.,.,', 'LlnocCipher.y', 50)
   def _reduce_12(val, _values, result)
      result = [:HEX, val[0]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 54)
+module_eval(<<'.,.,', 'LlnocCipher.y', 51)
   def _reduce_13(val, _values, result)
      result = [:HEX, val[0][1] + val[1]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 55)
+module_eval(<<'.,.,', 'LlnocCipher.y', 52)
   def _reduce_14(val, _values, result)
      result = [:HEX, val[0][1] + val[1]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 56)
+module_eval(<<'.,.,', 'LlnocCipher.y', 53)
   def _reduce_15(val, _values, result)
      result = [:HEX, val[0][1] + val[1][1]] 
     result
@@ -351,14 +352,14 @@ module_eval(<<'.,.,', 'LlnocCipher.y', 56)
 
 # reduce 27 omitted
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 58)
+module_eval(<<'.,.,', 'LlnocCipher.y', 55)
   def _reduce_28(val, _values, result)
      result = [:DEC, val[0]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 59)
+module_eval(<<'.,.,', 'LlnocCipher.y', 56)
   def _reduce_29(val, _values, result)
      result = [:DEC, val[0][1] + val[1]] 
     result
@@ -372,3 +373,24 @@ end
 end   # class LlnocCipherParser
 
 
+text = (ARGV.size >0 ? ARGF : $stdin).read
+str = ""
+ch = 0
+i = 0
+
+text.split("\n").each do |l|
+  result = 3
+  begin
+    result = LlnocCipherParser.new.parse(l)
+  rescue => e
+    result = 3
+  end
+  ch = ch << 2 | result
+  if (i % 4) == 3
+    str += ch.chr
+    ch = 0
+  end
+  i+=1
+end
+
+p str

@@ -4,15 +4,12 @@ prechigh
 preclow
 
 rule
-  #cipher : addr
-  #       | cipher EOL addr { result = val[0] + val[2]; p 'cipher: ' + val[0] + ', ' + val[2] }
-  #       | cipher EOL
-
   addr : period_sep
   {
     return 3 unless val[0].length == 4
     val[0].each do |v|
       return 3 unless v[0] == :DEC
+      return 3 if v[1][0] == '0'
       return 3 unless (0..255).include?(v[1].to_i)
     end
     return 1 # ipv4
@@ -28,7 +25,7 @@ rule
     when 8
       val[0].each do |v|
         return 3 if v[1].length > 4
-        return 3 if v[1][0] == '0' # [v[1].length - 1] == '0'
+        return 3 if v[1][0] == '0'
       end
       return 2 # ipv6
     else
@@ -88,3 +85,26 @@ def next_token
 end # def next_token
 
 ---- footer
+
+text = (ARGV.size >0 ? ARGF : $stdin).read
+str = ""
+ch = 0
+i = 0
+
+text.split("\n").each do |l|
+  result = 3
+  begin
+    result = LlnocCipherParser.new.parse(l)
+  rescue => e
+    result = 3
+  end
+  ch = ch << 2 | result
+  if (i % 4) == 3
+    str += ch.chr
+    ch = 0
+  end
+  i+=1
+end
+
+p str
+
