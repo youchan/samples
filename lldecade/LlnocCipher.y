@@ -15,37 +15,33 @@ rule
       return 3 unless v[0] == :DEC
       return 3 unless (0..255).include?(v[1].to_i)
     end
-    return 1
+    return 1 # ipv4
   }
        | colon_sep
   {
-    p 'case'
     case val[0].length
     when 6
-      p 'when 6'
       val[0].each do |v|
         return 3 unless v[1].length == 2
       end
-      return 0
+      return 0 # mac
     when 8
-      p 'when 8'
       val[0].each do |v|
         return 3 if v[1].length > 4
+        return 3 if v[1][0] == '0' # [v[1].length - 1] == '0'
       end
-      return 2
+      return 2 # ipv6
     else
-      p 'else'
-      return 3
+      return 3 # other
     end
   }
        | hyphen_sep
   {
-    p 'hyphen_sep'
     return 3 unless val[0].length == 6
     val[0].each do |v|
       return 3 unless v[1].length == 2
     end
-    return 0
+    return 0 # mac
   }
 
   period_sep : number PERIOD number { result = [val[0], val[2]] }

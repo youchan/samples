@@ -7,7 +7,7 @@
 require 'racc/parser.rb'
 class LlnocCipherParser < Racc::Parser
 
-module_eval(<<'...end LlnocCipher.y/module_eval...', 'LlnocCipher.y', 68)
+module_eval(<<'...end LlnocCipher.y/module_eval...', 'LlnocCipher.y', 64)
 def parse(source)
   @queue = []
   source.each_char do |ch|
@@ -213,7 +213,7 @@ module_eval(<<'.,.,', 'LlnocCipher.y', 12)
       return 3 unless v[0] == :DEC
       return 3 unless (0..255).include?(v[1].to_i)
     end
-    return 1
+    return 1 # ipv4
   
     result
   end
@@ -221,78 +221,74 @@ module_eval(<<'.,.,', 'LlnocCipher.y', 12)
 
 module_eval(<<'.,.,', 'LlnocCipher.y', 21)
   def _reduce_2(val, _values, result)
-        p 'case'
-    case val[0].length
+        case val[0].length
     when 6
-      p 'when 6'
       val[0].each do |v|
         return 3 unless v[1].length == 2
       end
-      return 0
+      return 0 # mac
     when 8
-      p 'when 8'
       val[0].each do |v|
         return 3 if v[1].length > 4
+        return 3 if v[1][0] == '0' # [v[1].length - 1] == '0'
       end
-      return 2
+      return 2 # ipv6
     else
-      p 'else'
-      return 3
+      return 3 # other
     end
   
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 42)
+module_eval(<<'.,.,', 'LlnocCipher.y', 39)
   def _reduce_3(val, _values, result)
-        p 'hyphen_sep'
-    return 3 unless val[0].length == 6
+        return 3 unless val[0].length == 6
     val[0].each do |v|
       return 3 unless v[1].length == 2
     end
-    return 0
+    return 0 # mac
   
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 50)
+module_eval(<<'.,.,', 'LlnocCipher.y', 46)
   def _reduce_4(val, _values, result)
      result = [val[0], val[2]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 51)
+module_eval(<<'.,.,', 'LlnocCipher.y', 47)
   def _reduce_5(val, _values, result)
      result << val[2] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 52)
+module_eval(<<'.,.,', 'LlnocCipher.y', 48)
   def _reduce_6(val, _values, result)
      result = [val[0], val[2]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 53)
+module_eval(<<'.,.,', 'LlnocCipher.y', 49)
   def _reduce_7(val, _values, result)
      result << val[2] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 54)
+module_eval(<<'.,.,', 'LlnocCipher.y', 50)
   def _reduce_8(val, _values, result)
      result = [val[0], val[2]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 55)
+module_eval(<<'.,.,', 'LlnocCipher.y', 51)
   def _reduce_9(val, _values, result)
      result << val[2] 
     result
@@ -303,28 +299,28 @@ module_eval(<<'.,.,', 'LlnocCipher.y', 55)
 
 # reduce 11 omitted
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 57)
+module_eval(<<'.,.,', 'LlnocCipher.y', 53)
   def _reduce_12(val, _values, result)
      result = [:HEX, val[0]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 58)
+module_eval(<<'.,.,', 'LlnocCipher.y', 54)
   def _reduce_13(val, _values, result)
      result = [:HEX, val[0][1] + val[1]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 59)
+module_eval(<<'.,.,', 'LlnocCipher.y', 55)
   def _reduce_14(val, _values, result)
      result = [:HEX, val[0][1] + val[1]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 60)
+module_eval(<<'.,.,', 'LlnocCipher.y', 56)
   def _reduce_15(val, _values, result)
      result = [:HEX, val[0][1] + val[1][1]] 
     result
@@ -355,14 +351,14 @@ module_eval(<<'.,.,', 'LlnocCipher.y', 60)
 
 # reduce 27 omitted
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 62)
+module_eval(<<'.,.,', 'LlnocCipher.y', 58)
   def _reduce_28(val, _values, result)
      result = [:DEC, val[0]] 
     result
   end
 .,.,
 
-module_eval(<<'.,.,', 'LlnocCipher.y', 63)
+module_eval(<<'.,.,', 'LlnocCipher.y', 59)
   def _reduce_29(val, _values, result)
      result = [:DEC, val[0][1] + val[1]] 
     result
