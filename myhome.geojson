@@ -1,4 +1,4 @@
 { "type": "Feature",
   "geometry": {"type": "Point", "coordinates": [139.807277, 35.714821]},
-  "properties": {}
+  "properties": {"description": "Youchan's house"}
 }
